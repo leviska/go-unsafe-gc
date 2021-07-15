@@ -3,7 +3,6 @@ package pkg_test
 import (
 	"fmt"
 	"reflect"
-	"runtime"
 	"sync"
 	"testing"
 	"unsafe"
@@ -31,25 +30,15 @@ func Copy(s []byte) T {
 }
 
 func Mid(a []byte, b []byte) []byte {
-	fmt.Printf("%p %p\n", a, b)
-	sum := 0
-	for i := 0; i < 10000; i++ {
-		c := make([]byte, 1024*1024)
-		sum += len(c)
-	}
-	fmt.Println(sum)
+	fmt.Printf("%p %s %p %s\n", a, a, b, b)
 	wg := sync.WaitGroup{}
-	wg.Add(2)
-	go func() {
-		runtime.GC()
-		wg.Done()
-	}()
+	wg.Add(1)
 	go func() {
 		b = b[1:2]
 		wg.Done()
 	}()
 	wg.Wait()
-	fmt.Printf("%p %p\n", a, b)
+	fmt.Printf("%p %s %p %s\n", a, a, b, b)
 	return b
 }
 
